@@ -14,12 +14,20 @@ In this article, you'll learn how to use Azure SignalR Service to create a real-
 First let's create a web chat room using SignalR Core. To use SignalR Core, you need to first download and install [.NET Core SDK](https://www.microsoft.com/net/learn/get-started).
 
 Build and run the chat room same at [ChatDemo](ChatDemo) folder:
-1. Clone repo(.)
+1. Clone [repo]().
 2. Checkout to local branch:
    ```
    git checkout local
    ```
-3. 
+3. Build chat room app:
+   ```
+   cd ChatDemo
+   dotnet build
+   ```
+4. Run chat room app:
+   ```
+   dotnet run
+   ```
 
 
 
