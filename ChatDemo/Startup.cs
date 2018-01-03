@@ -30,7 +30,7 @@ namespace MyChat
             {
                 logLevel = LogLevel.Information;
             }
-            services.AddSignalRService(hubOption => { hubOption.ConsoleLogLevel = logLevel; });
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,7 +41,7 @@ namespace MyChat
                 app.UseDeveloperExceptionPage();
             }
             app.UseFileServer();
-            app.UseSignalRService(Configuration["SignalRService:ConnectionString"], routes =>
+            app.UseSignalR(routes =>
             {
                 routes.MapHub<Chat>("chat");
             });
