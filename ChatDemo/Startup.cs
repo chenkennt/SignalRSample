@@ -41,8 +41,10 @@ namespace MyChat
                 app.UseDeveloperExceptionPage();
             }
             app.UseFileServer();
-            app.UseSignalRService(Configuration["SignalRService:ConnectionString"],
-                routes => { routes.MapHub<Chat>("chat"); });
+            app.UseSignalRService(Configuration["SignalRService:ConnectionString"], routes =>
+            {
+                routes.MapHub<Chat>("chat");
+            });
         }
     }
 }
