@@ -15,7 +15,7 @@
   </ItemGroup>
   <Target Name="CopyTSClient" BeforeTargets="AfterBuild">
     <ItemGroup>
-      <SignalRJSClientFiles Include="$(MSBuildThisFileDirectory)..\lib\scripts\*" />
+      <SignalRJSClientFiles Include="$(MSBuildThisFileDirectory)..\lib\signalr-client\*" />
     </ItemGroup>
     <Copy SourceFiles="@(SignalRJSClientFiles)" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\scripts" />
   </Target>
