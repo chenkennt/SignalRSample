@@ -141,4 +141,50 @@ After your service is ready, let's go to the resource and see which properties i
 
 Now let's update the chat room sample to use Azure SignalR Service.
 
-The code is already at master branch, checkout this branch (`git checkout master`) and let's what're the differences.
+The code is already at master branch, checkout this branch (`git checkout master`) and let's see what're the differences.
+
+1. First, you need to add the service endpoint as a configuration entry.
+
+   ![change1](resources/change1.png)
+
+   Update the endpoint and key with the ones of your SignalR service.
+
+2. Then in [Startup.cs](ChatDemo/Startup.cs), instead of calling `AddSignalR` and `UseSignalR`, you need to call `AddSignalRService` and `UseSignalRService` and pass in the service endpoint to make the application connect the service instead of hosting SignalR on its own.
+
+   ![change2](resources/change2.png)
+
+3. In client ([index.html](ChatDemo/index.html)), use `ServiceConnection` instead of `HubConnection`, which will automatically get service endpoint from application server and connect to the hub.
+
+   ![change3](resources/change3.png)
+
+4. Finally, you need to reference a new package (`Microsoft.AspNetCore.SignalR.Service.Core`) where `AddSignalRService` and `UseSignalRService` are implemented.
+
+   ![change4](resources/change4.png)
+
+Other than these changes, everything else remains the same, you can still use the hub interface you're already familiar with to write business logic.
+
+Now let's build and run the app, you can see the app runs as usual, but instead of hosting a SignalR runtime by itself, it connects to the SignalR service running on Azure.
+
+![signalr5](resources/signalr5.png)
+
+### Monitor Your SignalR Service
+
+One benefit that comes with Azure SignalR Service is you'll have the ability to monitor your service status.
+
+Go to your resource, open Monitoring Panel, click "Go to the Monitoring Dashboard", it will bring you to the service monitoring dashboard.
+
+![monitoring1](resources/monitoring1.png)
+
+You can see some useful information in the monitoring dashboard, including the connection count, message count, connection rate and message rate. These data are almost real-time (refresh in 10 seconds) so you can know the status of your service in real time.
+
+## Details Explained
+
+TO BE ADDED
+
+### Architecture
+
+### Authentication
+
+## Deploy Your Chat Room to Azure
+
+TO BE ADDED
