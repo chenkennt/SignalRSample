@@ -188,4 +188,44 @@ TO BE ADDED
 
 ## Deploy Your Chat Room to Azure
 
-TO BE ADDED
+Next step is to deploy your chat room app to an Azure Web App so you don't need to host it by yourself.
+
+1. Azure Web App supports Docker container, first build the chat room app into a container.
+   ```
+   docker build -t chatdemo .
+   ```
+   To test the container locally:
+   ```
+   docker run -p 5050:5050 chatdemo
+   ```
+   Then you can use http://localhost:5050 to access the chat room.
+
+2. Push the docker image to a container registry (this sample uses Azure Container Registry, you can also use other registries like DockerHub):
+   ```
+   docker login <acr_name>.azurecr.io
+   docker tag chatdemo <acr_name>.azurecr.io/chatdemo
+   docker push <acr_name>.azurecr.io/chatdemo
+   ```
+
+3. Next let's deploy the docker image to Web App.
+   > This article uses [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) to deploy to Azure, you can also use other tools (like Visual Studio) to do the deployment.
+
+   First create an Azure Web App.
+   ```
+   az group create --name <resource_group_name> --location "West US"
+   az appservice plan create --name <app_service_plan_name> --resource-group <resource_group_name> --sku S1 --is-linux
+   az webapp create --resource-group <resource_group_name> --plan <app_service_plan_name> --name <app_name>
+   ```
+
+   Then deploy the docker image to the web app:
+   ```
+   az webapp config container set
+      --resource-group <resource_group_name> --name <app_name>
+      --docker-custom-image-name <acr_name>.azurecr.io/chatdemo
+      --docker-registry-server-url https://<acr_name>.azurecr.io
+      --docker-registry-server-user <acr_name>
+      --docker-registry-server-password <acr_password>
+   az webapp config appsettings set --resource-group <resource_group_name> --name <app_name> --setting PORT=5050
+   ```
+
+   Now access the web app (`http://<app_name>.azurewebsites.net`) you'll see your chat room running in cloud.
