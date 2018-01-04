@@ -14,7 +14,7 @@ In this article, you'll learn how to use Azure SignalR Service to create a real-
 First let's create a web chat room using SignalR Core. To use SignalR Core, you need to first download and install [.NET Core SDK](https://www.microsoft.com/net/learn/get-started).
 
 Build and run the chat room same at [ChatDemo](ChatDemo) folder:
-1. Checkout to local branch:
+1. Checkout local branch:
    ```
    git checkout local
    ```
@@ -115,3 +115,30 @@ The sample above is a traditional SignalR application, where SignalR runtime and
 ### Create an Azure SignalR Service
 
 First let's create a SignalR service on Azure.
+
+1. Open Azure portal, click "Create a resource" and find "SignalR Service (preview)".
+
+   ![signalr1](resources/signalr1.png)
+
+2. Click "Create", and then fill necessary information, including resource name, resource group and location.
+
+   ![signalr2](resources/signalr2.png)
+
+   Resource name will also be used as the DNS name of your service point. So you'll get a `<resource_name>.<location>.cloudapp.azure.com` that you can connect to.
+
+3. Click "Create", your SignalR service will be created in a few minutes.
+
+   ![signalr3](resources/signalr3.png)
+
+After your service is ready, let's go to the resource and see which properties it has.
+![signalr4](resources/signalr4.png)
+
+1. DNS and public IP, this is the public address of the service. Azure SignalR Service uses 5001 port, you can use `<DNS>:5001` (also shown as host name) to connect to the service.
+
+2. Primary key and secondary key. This is the key you can use to authenticate with the service. When using SignalR service, your application server authenticates with service using this access keys. Clients will authenticate with service using a different way (JWT, will be discussed later in this article).
+
+### Update Web Chat Room to use Azure SignalR Service
+
+Now let's update the chat room sample to use Azure SignalR Service.
+
+The code is already at master branch, checkout this branch (`git checkout master`) and let's what're the differences.
