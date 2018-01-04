@@ -131,6 +131,7 @@ First let's create a SignalR service on Azure.
    ![signalr3](resources/signalr3.png)
 
 After your service is ready, let's go to the resource and see which properties it has.
+
 ![signalr4](resources/signalr4.png)
 
 1. DNS and public IP, this is the public address of the service. Azure SignalR Service uses 5001 port, you can use `<DNS>:5001` (also shown as host name) to connect to the service.
