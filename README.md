@@ -213,8 +213,8 @@ Next step is to deploy your chat room app to an Azure Web App so you don't need 
    First create an Azure Web App.
    ```
    az group create --name <resource_group_name> --location "West US"
-   az appservice plan create --name <app_service_plan_name> --resource-group <resource_group_name> --sku S1 --is-linux
-   az webapp create --resource-group <resource_group_name> --plan <app_service_plan_name> --name <app_name>
+   az appservice plan create --name <plan_name> --resource-group <resource_group_name> --sku S1 --is-linux
+   az webapp create --resource-group <resource_group_name> --plan <plan_name> --name <app_name>
    ```
 
    Then deploy the docker image to the web app:
