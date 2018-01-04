@@ -14,6 +14,8 @@ namespace MyChat
             var host = new WebHostBuilder()
                 .ConfigureLogging((context, factory) =>
                 {
+                    factory.AddConfiguration(context.Configuration.GetSection("Logging"));
+                    factory.AddConsole();
                     factory.AddDebug();
                 })
                 .UseKestrel()
