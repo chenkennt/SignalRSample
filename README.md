@@ -8,12 +8,12 @@ This is where Azure SignalR Service can help. With Azure SignalR Service, you ca
 
 In this article, you'll learn how to use Azure SignalR Service to create a real-time web application.
 
-> Azure SignalR Service is built on [SignalR for ASP.NET Core](https://github.com/aspnet/SignalR) (which has some differences from ASP.NET SignalR). So you'll need to switch to SignalR Core in order to use this service.
+> Azure SignalR Service is built on [SignalR for ASP.NET Core](https://github.com/aspnet/SignalR) (which has some differences than ASP.NET SignalR). You'll need to switch to SignalR Core in order to use this service.
 
 ## Build a Web Chat Room using SignalR
-First let's create a web chat room using SignalR Core. To use SignalR Core, you need to first download and install [.NET Core SDK](https://www.microsoft.com/net/learn/get-started).
+First let's create a web chat room using SignalR Core. To use SignalR Core, you need to first install [.NET Core SDK](https://www.microsoft.com/net/learn/get-started).
 
-Build and run the chat room same at [ChatDemo](ChatDemo) folder:
+Build and run the chat room sample at [ChatDemo](ChatDemo) folder:
 1. Checkout local branch:
    ```
    git checkout local
@@ -30,7 +30,7 @@ Build and run the chat room same at [ChatDemo](ChatDemo) folder:
 
 Now you can open http://localhost:5050 in browser.
 
-First time you open the chat room you'll be asked for you name:
+First time you open the chat room you'll be asked for your name:
 
 ![chat1](resources/chat1.png)
 
@@ -38,13 +38,13 @@ Then type something in the text box and press enter, your message will be sent t
 
 ![chat2](resources/chat2.png)
 
-Open multiple browser windows, then each one can talk to each other.
+Open more browser windows, each one can talk to each other.
 
 ## A Brief Explanation
 
-Here is a brief explanation of how this chat room application works.
+Here is a brief explanation about how this chat room application works.
 
-One core concept in SignalR is Hub. Hub is a programming model that allows server and client talk to each other by calling methods. Here a hub defined in [Chat.cs](ChatDemo/Chat.cs):
+One core concept in SignalR is Hub. Hub is a programming model that allows server and client talk to each other by calling methods. Here is a hub defined in [Chat.cs](ChatDemo/Chat.cs):
 ```csharp
 public class Chat : Hub
 {
@@ -64,7 +64,7 @@ document.getElementById('sendmessage').addEventListener('click', function (event
 });
 ```
 
-Also inside a hub, server can call methods that are defined in client directly. In this sample, it calls a `broadcastMessage` method that displays the message to the chat window:
+Also inside a hub, server can call methods that are defined in client directly. In this sample, it calls a `broadcastMessage` method that displays the message in the chat window:
 ```js
 var messageCallback = function (name, message) {
   // Html encode display name and message.
@@ -80,9 +80,9 @@ var messageCallback = function (name, message) {
 connection.on('broadcastMessage', messageCallback);
 ```
 
-After you have the server and client logic, there is a few lines of code needed to start the SignalR server and connect it with client.
+After you have the server and client logic, there are only a few lines of code needed to start the SignalR server and connect it with client.
 
-At server side, you need to call `AddSignalR` to initialize your SignalR server and map your hub to a server url (/chat):
+At server side, you need to call `AddSignalR` to initialize your SignalR server and map your hub to a server url (`/chat`):
 ```cs
 public void ConfigureServices(IServiceCollection services)
 {
@@ -100,17 +100,17 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 }
 ```
 
-At client side, create a HubConnection that connects to the chat endpoint:
+In client code, create a HubConnection that connects to the chat endpoint:
 ```js
 var connection = new signalR.HubConnection(url, { transport: transport, uid: name });
 ...
 return connection.start();
 ```
 
-> This sample is based on the chat sample in SignalR official documentation, see this [article](https://docs.microsoft.com/en-us/aspnet/signalr/overview/getting-started/tutorial-getting-started-with-signalr-and-mvc) for more information of this sample.
+> This sample is based on the chat sample in SignalR official documentation, see this [article](https://docs.microsoft.com/en-us/aspnet/signalr/overview/getting-started/tutorial-getting-started-with-signalr-and-mvc) for more information.
 
 ## Use Azure SignalR Service in Web Chat Room
-The sample above is a traditional SignalR application, where SignalR runtime and business logic runs inside the same ASP.NET web application. Now let's use Azure SignalR Service to replace the SignalR runtime in your application.
+The sample above is a self-hosted SignalR application, where SignalR runtime and business logic runs inside the same ASP.NET web application. Now let's use Azure SignalR Service to replace the SignalR runtime in your application.
 
 ### Create an Azure SignalR Service
 
@@ -124,7 +124,7 @@ First let's create a SignalR service on Azure.
 
    ![signalr2](resources/signalr2.png)
 
-   Resource name will also be used as the DNS name of your service point. So you'll get a `<resource_name>.<location>.cloudapp.azure.com` that you can connect to.
+   Resource name will also be used as the DNS name of your service point. So you'll get a `<resource_name>.<location>.cloudapp.azure.com` that your application can connect to.
 
 3. Click "Create", your SignalR service will be created in a few minutes.
 
@@ -134,13 +134,13 @@ After your service is ready, let's go to the resource and see which properties i
 
 ![signalr4](resources/signalr4.png)
 
-1. DNS and public IP, this is the public address of the service. Azure SignalR Service uses 5001 port, you can use `<DNS>:5001` (also shown as host name) to connect to the service.
+1. DNS and public IP, this is the public address of the service. Azure SignalR Service uses 5001 port, so you can use `<DNS>:5001` (which also shown in host name) to connect to the service.
 
-2. Primary key and secondary key. This is the key you can use to authenticate with the service. When using SignalR service, your application server authenticates with service using this access keys. Clients will authenticate with service using a different way (JWT, will be discussed later in this article).
+2. Primary key and secondary key. This is the key you can use to authenticate with the service. When using SignalR service, your application server authenticates with service using these access keys. Clients will authenticate with service using a different way (JWT, will be discussed later in this article).
 
 ### Update Web Chat Room to use Azure SignalR Service
 
-Now let's update the chat room sample to use Azure SignalR Service.
+Then let's update the chat room sample to use Azure SignalR Service.
 
 The code is already at master branch, checkout this branch (`git checkout master`) and let's see what're the differences.
 
@@ -150,7 +150,7 @@ The code is already at master branch, checkout this branch (`git checkout master
 
    Update the endpoint and key with the ones of your SignalR service.
 
-2. Then in [Startup.cs](ChatDemo/Startup.cs), instead of calling `AddSignalR` and `UseSignalR`, you need to call `AddSignalRService` and `UseSignalRService` and pass in the service endpoint to make the application connect the service instead of hosting SignalR on its own.
+2. Then in [Startup.cs](ChatDemo/Startup.cs), instead of calling `AddSignalR` and `UseSignalR`, you need to call `AddSignalRService` and `UseSignalRService` and pass in the service endpoint to make the application connect the service instead of hosting SignalR by itself.
 
    ![change2](resources/change2.png)
 
@@ -170,15 +170,19 @@ Now let's build and run the app, you can see the app runs as usual, but instead 
 
 ### Monitor Your SignalR Service
 
-One benefit that comes with Azure SignalR Service is you'll have the ability to monitor your service status.
+One benefit that comes with Azure SignalR Service is you can easily monitor the status of your service.
 
-Go to your resource, open Monitoring Panel, click "Go to the Monitoring Dashboard", it will bring you to the service monitoring dashboard.
+Go to your resource, open Monitoring panel, click "Go to the Monitoring Dashboard", it will bring you to the service monitoring dashboard.
 
 ![monitoring1](resources/monitoring1.png)
 
-You can see some useful information in the monitoring dashboard, including the connection count, message count, connection rate and message rate. These data are almost real-time (refresh in 10 seconds) so you can know the status of your service in real time.
+You can see some useful information in the monitoring dashboard, including the connection count, message count, connection rate and message rate. These data are almost real-time (refresh every 10 seconds) so you can know the status of your service in real time.
 
 ## Details Explained
+
+Now let's take a deeper look into the Azure SignalR Service, what's the difference between hosting SignalR by yourself and using the service?
+
+
 
 TO BE ADDED
 
@@ -188,9 +192,9 @@ TO BE ADDED
 
 ## Deploy Your Chat Room to Azure
 
-Next step is to deploy your chat room app to an Azure Web App so you don't need to host it by yourself.
+Next let's deploy your chat room app to an Azure Web App so you don't need to host it by yourself.
 
-1. Azure Web App supports Docker container, first build the chat room app into a container.
+1. Azure Web App supports Docker container, so first build the chat room app into a Docker image.
    ```
    docker build -t chatdemo .
    ```
@@ -199,6 +203,8 @@ Next step is to deploy your chat room app to an Azure Web App so you don't need 
    docker run -p 5050:5050 chatdemo
    ```
    Then you can use http://localhost:5050 to access the chat room.
+
+   > For details about building docker image for a .NET Core app, please refer to this [doc](https://docs.microsoft.com/en-us/dotnet/core/docker/building-net-docker-images).
 
 2. Push the docker image to a container registry (this sample uses Azure Container Registry, you can also use other registries like DockerHub):
    ```
@@ -228,4 +234,6 @@ Next step is to deploy your chat room app to an Azure Web App so you don't need 
    az webapp config appsettings set --resource-group <resource_group_name> --name <app_name> --setting PORT=5050
    ```
 
-   Now access the web app (`http://<app_name>.azurewebsites.net`) you'll see your chat room running in cloud.
+   > For more information about using Docker image on Azure Web App, please refer to this [doc](https://docs.microsoft.com/en-us/azure/app-service/containers/tutorial-custom-docker-image).
+
+Now access the web app (`http://<app_name>.azurewebsites.net`) you'll see your chat room running in cloud.
