@@ -30,7 +30,7 @@ namespace MyChat
             {
                 logLevel = LogLevel.Information;
             }
-            services.AddSignalRService(hubOption => { hubOption.ConsoleLogLevel = logLevel; });
+            services.AddSignalRService(hubOption => { hubOption.ConsoleLogLevel = logLevel; hubOption.ConnectionNumber = 100; });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
